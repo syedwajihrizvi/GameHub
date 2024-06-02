@@ -25,22 +25,27 @@ interface FetchGameResponse {
 const useGames = () => {
     const [games, setGames] = useState<Game[]>([])
     const [error, setError] = useState('')
-    
+    const [loading, setLoading] = useState(false)
+
     useEffect(() => {
         const controller = new AbortController()
-        rawgApi.get<FetchGameResponse>('/games', {signal: controller.signal})
-        .then(res => {
-            setGames(res.data.results)
-        })
-        .catch(err => {
-            if (err instanceof CanceledError)
-                return
-            setError(err)
-        })
-        return () => controller.abort()
+        setLoading(true)
+        setTimeout(() => {
+            rawgApi.get<FetchGameResponse>('/games', {signal: controller.signal})
+            .then(res => {
+                setGames(res.data.results)
+            })
+            .catch(err => {
+                if (err instanceof CanceledError)
+                    return
+                setError(err)
+            })
+            .finally(() => setLoading(false))
+            return () => controller.abort()
+        }, 5000)
     }, [])
 
-    return {games, error}
+    return {games, error, loading}
 }
 
 export default useGames
