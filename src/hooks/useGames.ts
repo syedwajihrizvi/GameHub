@@ -1,12 +1,20 @@
 import { useEffect, useState } from "react"
 import apiService from "../services/api-service"
 import { CanceledError } from "axios"
+import Platform from "../components/Platforms"
 
 const rawgApi = apiService()
 
-interface Game {
+interface PlatformType {
+    platform: Platform
+}
+
+export interface Game {
     id: number,
-    name: string
+    name: string,
+    background_image: string,
+    parent_platforms: PlatformType[]
+    metacritic: string
 }
 
 interface FetchGameResponse {
