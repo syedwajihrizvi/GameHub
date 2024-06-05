@@ -11,7 +11,7 @@ interface Props {
 function GameCard({game}: Props) {
     const platforms = [...game.parent_platforms].map(platform => platform.platform)
     return (
-        <Card width='400px' borderRadius={3} overflow="hidden" variant="outline">
+        <Card variant="outline">
         <CardBody>
          <VStack>
             <Image borderRadius={3} src={getCroppedUrl(game.background_image)} />
