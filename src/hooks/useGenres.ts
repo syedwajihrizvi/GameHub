@@ -13,23 +13,28 @@ const api = apiService()
 const useGenres = () => {
     const [error, setError] = useState('')
     const [genres, setGenres] = useState<Genre[]>([])
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         const controller = new AbortController()
-        api.get("/genres", {signal: controller.signal})
-        .then(res => {
-            const {data: {results:genres}} = res
-            setGenres(genres)
-        })
-        .catch(err => {
-            if (err instanceof CanceledError)
-                return
-            setError(err)
-        })
-        .finally(() => () => controller.abort())
+        setLoading(true)
+        setTimeout(() => {
+            api.get("/genres", {signal: controller.signal})
+            .then(res => {
+                const {data: {results:genres}} = res
+                setGenres(genres)
+            })
+            .catch(err => {
+                if (err instanceof CanceledError)
+                    return
+                setError(err)
+            })
+            .finally(() => setLoading(false))
+            return () => controller.abort()
+        }, 4000)
     }, [])
 
-    return {genres, error}
+    return {genres, error, loading}
 }
 
 export default useGenres
