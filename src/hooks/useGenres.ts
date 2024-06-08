@@ -18,20 +18,18 @@ const useGenres = () => {
     useEffect(() => {
         const controller = new AbortController()
         setLoading(true)
-        setTimeout(() => {
-            api.get("/genres", {signal: controller.signal})
-            .then(res => {
-                const {data: {results:genres}} = res
-                setGenres(genres)
-            })
-            .catch(err => {
-                if (err instanceof CanceledError)
-                    return
-                setError(err)
-            })
-            .finally(() => setLoading(false))
-            return () => controller.abort()
-        }, 2000)
+        api.get("/genres", {signal: controller.signal})
+        .then(res => {
+            const {data: {results:genres}} = res
+            setGenres(genres)
+        })
+        .catch(err => {
+            if (err instanceof CanceledError)
+                return
+            setError(err)
+        })
+        .finally(() => setLoading(false))
+        return () => controller.abort()
     }, [])
 
     return {genres, error, loading}

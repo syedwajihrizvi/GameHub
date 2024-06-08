@@ -1,16 +1,20 @@
-import { Grid, GridItem, Show } from "@chakra-ui/react"
+import { Grid, GridItem, HStack, Show } from "@chakra-ui/react"
 import NavBar from "./components/NavBar"
 import GameGrid from "./components/GameGrid"
 import SideBar from "./components/SideBar"
 
 import { useState } from "react"
-import PlatformSelecter from "./components/PlatformSelector"
+import PlatformSelector from "./components/PlatformSelector"
 import Platform from "./components/Platforms"
 import { Genre } from "./hooks/useGenres"
+import SortSelector from "./components/SortSelector"
+import { Sorter } from "./components/SortSelector"
 
 export interface GameQuery {
   genre: Genre | null
   platform: Platform | null
+  sorters: string[]
+  search: string
 }
 
 function App() {
@@ -27,6 +31,33 @@ function App() {
     setGameQuery({...gameQuery, platform })
   }
 
+  const handleSelectSort = (sorter: Sorter) => {
+    if (gameQuery.sorters == null)
+      setGameQuery({...gameQuery, sorters:[`-${sorter.queryString}`]})
+    else {
+      const newSorter = [...gameQuery.sorters]
+      const indexOfAscendingSorter = gameQuery.sorters.indexOf(`-${sorter.queryString}`)
+      const indexOfDescendingSorter = gameQuery.sorters.indexOf(sorter.queryString)
+      if (indexOfAscendingSorter > -1) {
+        newSorter[indexOfAscendingSorter] = sorter.queryString
+        console.log(newSorter)
+      }
+      else if (indexOfDescendingSorter > -1) {
+        newSorter.splice(indexOfDescendingSorter, 1)
+      }
+      else {
+        newSorter.push(`-${sorter.queryString}`)
+      }
+      setGameQuery({...gameQuery, sorters: newSorter})
+    }
+    
+  }
+
+  const handleSearch = (search: string) => {
+    if (search != gameQuery.search)
+      setGameQuery({...gameQuery, search})
+  }
+
   return (
     <Grid templateAreas={{
       base: `"nav" "main" "footer"`,
@@ -36,7 +67,7 @@ function App() {
       lg: '200px 1fr'
     }}>
       <GridItem pl='2' area='nav'>
-        <NavBar/>
+        <NavBar handleEnter={handleSearch}/>
       </GridItem>
       <Show above="lg">
         <GridItem margin={5} pl='2' area='aside'>
@@ -44,7 +75,10 @@ function App() {
         </GridItem>
       </Show>
       <GridItem margin={5} area='main'>
-        <PlatformSelecter selectedPlatform={gameQuery.platform} onSelectPlatform={handleSelectPlatform}/>
+        <HStack>
+          <PlatformSelector selectedPlatform={gameQuery.platform} onSelectPlatform={handleSelectPlatform}/>
+          <SortSelector selectedSorters={gameQuery.sorters} onSelectSorter={handleSelectSort}/>
+        </HStack>
         <GameGrid gameQuery={gameQuery}/>
       </GridItem>
       <GridItem area='footer'>

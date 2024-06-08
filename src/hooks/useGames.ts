@@ -32,20 +32,20 @@ const useGames = (gameQuery: GameQuery) => {
 
     useEffect(() => {
         const controller = new AbortController()
+        const sortQuery = gameQuery.sorters != null ? gameQuery.sorters.join(" ") : ''
         setLoading(true)
-        setTimeout(() => {
-            rawgApi.get<FetchGameResponse>('/games', {signal: controller.signal, params: {genres: gameQuery.genre?.id, platforms: gameQuery.platform?.id}})
-            .then(res => {
-                setGames(res.data.results)
-            })
-            .catch(err => {
-                if (err instanceof CanceledError)
-                    return
-                setError(err)
-            })
-            .finally(() => setLoading(false))
-            return () => controller.abort()
-        }, 2000)
+        rawgApi.get<FetchGameResponse>('/games', 
+        {signal: controller.signal, params: {search: gameQuery.search, ordering: sortQuery, genres: gameQuery.genre?.id, platforms: gameQuery.platform?.id}})
+        .then(res => {
+            setGames(res.data.results)
+        })
+        .catch(err => {
+            if (err instanceof CanceledError)
+                return
+            setError(err)
+        })
+        .finally(() => setLoading(false))
+        return () => controller.abort()
     }, [gameQuery])
 
     return {games, error, loading}

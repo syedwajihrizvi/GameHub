@@ -8,7 +8,7 @@ interface Props {
     onSelectPlatform: (platform: Platform | null) => void
 }
 
-function PlatformSelecter({onSelectPlatform, selectedPlatform}: Props){
+function PlatformSelector({onSelectPlatform, selectedPlatform}: Props){
     const {platforms} = usePlatform()
     return (
         <Menu>
@@ -17,7 +17,7 @@ function PlatformSelecter({onSelectPlatform, selectedPlatform}: Props){
             </MenuButton>
             <MenuList>
                 {selectedPlatform != null && <MenuItem onClick={() => onSelectPlatform(null)}>All Platforms</MenuItem>}
-                {platforms.map(platform => platform.id != selectedPlatform?.id && <MenuItem onClick={() => onSelectPlatform(platform)}>{platform.name}</MenuItem>)}
+                {platforms.map(platform => platform.id != selectedPlatform?.id && <MenuItem key={platform.id} onClick={() => onSelectPlatform(platform)}>{platform.name}</MenuItem>)}
             </MenuList>
         </Menu>
         // <Select width='300px' placeholder='All Platforms' marginBottom={3} backgroundColor='green.300' onChange={(event) => onSelectPlatform(parseInt(event.target.value))}>
@@ -26,4 +26,4 @@ function PlatformSelecter({onSelectPlatform, selectedPlatform}: Props){
     )
 }
 
-export default PlatformSelecter
+export default PlatformSelector

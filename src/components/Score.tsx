@@ -14,7 +14,7 @@ function Score({score}: Props) {
     }
     return (
         <Badge borderRadius={4} ml='1' fontSize={{sm: '1.6em', md: '0.8em', lg: '1.0em', xl: '1.2em'}} colorScheme={getColorScheme(score)}>
-            <Text>{score}</Text>
+            <Text>{isNaN(score) ? "-" : score}</Text>
         </Badge>
     )
 }
