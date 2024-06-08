@@ -16,7 +16,7 @@ function GameCard({game}: Props) {
          <VStack>
             <Image borderRadius={3} src={getCroppedUrl(game.background_image)} />
             <Center>
-            <Heading as='h4' size='lg'>{game.name}</Heading>
+            <Heading as='h4' size={{ base: 'lg', md: 'md', lg: 'md', xl: 'lg'}}>{game.name}</Heading>
             </Center>
          </VStack>
         <Flex mt={2}>

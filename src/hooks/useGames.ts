@@ -2,6 +2,8 @@ import { useEffect, useState } from "react"
 import apiService from "../services/api-service"
 import { CanceledError } from "axios"
 import Platform from "../components/Platforms"
+import {Genre} from "./useGenres"
+import { GameQuery } from "../App"
 
 const rawgApi = apiService()
 
@@ -15,6 +17,7 @@ export interface Game {
     background_image: string,
     parent_platforms: PlatformType[]
     metacritic: string
+    genres: Genre[]
 }
 
 interface FetchGameResponse {
@@ -22,7 +25,7 @@ interface FetchGameResponse {
     results: Game[]
 }
 
-const useGames = () => {
+const useGames = (gameQuery: GameQuery) => {
     const [games, setGames] = useState<Game[]>([])
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
@@ -31,7 +34,7 @@ const useGames = () => {
         const controller = new AbortController()
         setLoading(true)
         setTimeout(() => {
-            rawgApi.get<FetchGameResponse>('/games', {signal: controller.signal})
+            rawgApi.get<FetchGameResponse>('/games', {signal: controller.signal, params: {genres: gameQuery.genre?.id, platforms: gameQuery.platform?.id}})
             .then(res => {
                 setGames(res.data.results)
             })
@@ -43,7 +46,7 @@ const useGames = () => {
             .finally(() => setLoading(false))
             return () => controller.abort()
         }, 2000)
-    }, [])
+    }, [gameQuery])
 
     return {games, error, loading}
 }

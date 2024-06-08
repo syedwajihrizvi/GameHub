@@ -29,7 +29,7 @@ function Platform({platforms}: Props) {
     platforms = platforms.filter(platform => platform.id != 4)
     return (
         <HStack>
-            {platforms.map(platform => <Icon as={mapPlatform(platform)} boxSize={4} color='gray.500'/>)}
+            {platforms.map(platform => <Icon as={mapPlatform(platform)} boxSize={{sm: 6, base: 4, md: 3, lg: 3, xl: 4}} color='gray.500'/>)}
         </HStack>
     )
 }

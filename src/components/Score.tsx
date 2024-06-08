@@ -13,7 +13,7 @@ function Score({score}: Props) {
         return "red"
     }
     return (
-        <Badge borderRadius={4} ml='1' fontSize='1.2em' colorScheme={getColorScheme(score)}>
+        <Badge borderRadius={4} ml='1' fontSize={{sm: '1.6em', md: '0.8em', lg: '1.0em', xl: '1.2em'}} colorScheme={getColorScheme(score)}>
             <Text>{score}</Text>
         </Badge>
     )

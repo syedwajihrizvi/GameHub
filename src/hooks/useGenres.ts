@@ -2,7 +2,7 @@ import { CanceledError } from "axios"
 import { useState, useEffect } from "react"
 import apiService from "../services/api-service"
 
-interface Genre {
+export interface Genre {
     id: number,
     name: string,
     image_background: string
@@ -31,7 +31,7 @@ const useGenres = () => {
             })
             .finally(() => setLoading(false))
             return () => controller.abort()
-        }, 4000)
+        }, 2000)
     }, [])
 
     return {genres, error, loading}
