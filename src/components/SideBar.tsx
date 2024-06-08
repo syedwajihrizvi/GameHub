@@ -20,7 +20,7 @@ function SideBar({onGenreSelect, activeGenre}: Props) {
                 return (
                     <ListItem key={genre.id} borderRadius={8} padding="5px" onClick={() => onGenreSelect(genre)} background={genre.id == activeGenre?.id ? 'green.300' : ''}>
                         <HStack>
-                            <Image src={getCroppedUrl(genre.image_background)} boxSize='32px' borderRadius={8}/>
+                            <Image objectFit='cover' src={getCroppedUrl(genre.image_background)} boxSize='32px' borderRadius={8}/>
                             <Link><Text marginLeft="3px" as='b' fontSize='lg'>{genre.name}</Text></Link>
                         </HStack>
                     </ListItem>
