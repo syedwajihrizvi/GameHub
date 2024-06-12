@@ -1,11 +1,10 @@
-import { useEffect, useState } from "react"
-import apiService from "../services/api-service"
-import { CanceledError } from "axios"
 import Platform from "../components/Platforms"
 import {Genre} from "./useGenres"
 import { GameQuery } from "../App"
+import { useQuery} from "@tanstack/react-query"
+import { API_CLIENT } from "../services/api-client"
 
-const rawgApi = apiService()
+const apiClient = new API_CLIENT('/games')
 
 interface PlatformType {
     platform: Platform
@@ -20,35 +19,23 @@ export interface Game {
     genres: Genre[]
 }
 
-interface FetchGameResponse {
-    count: number,
-    results: Game[]
-}
-
 const useGames = (gameQuery: GameQuery) => {
-    const [games, setGames] = useState<Game[]>([])
-    const [error, setError] = useState('')
-    const [loading, setLoading] = useState(false)
 
-    useEffect(() => {
-        const controller = new AbortController()
-        const sortQuery = gameQuery.sorters != null ? gameQuery.sorters.join(" ") : ''
-        setLoading(true)
-        rawgApi.get<FetchGameResponse>('/games', 
-        {signal: controller.signal, params: {search: gameQuery.search, ordering: sortQuery, genres: gameQuery.genre?.id, platforms: gameQuery.platform?.id}})
-        .then(res => {
-            setGames(res.data.results)
-        })
-        .catch(err => {
-            if (err instanceof CanceledError)
-                return
-            setError(err)
-        })
-        .finally(() => setLoading(false))
-        return () => controller.abort()
-    }, [gameQuery])
+    const sortQuery = gameQuery.sorters != null ? gameQuery.sorters.join(" ") : ''
+    const fetchGames = () => {
+        return apiClient.getAll<Game>(
+            {params: {
+                search: gameQuery.search, 
+                ordering: sortQuery, 
+                genres: gameQuery.genre?.id, 
+                platforms: gameQuery.platform?.id
+            }})
+    }
+    return useQuery<Game[], Error>({
+        queryKey: ['games', gameQuery],
+        queryFn: fetchGames,
 
-    return {games, error, loading}
+    })
 }
 
 export default useGames

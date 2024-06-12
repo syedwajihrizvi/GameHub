@@ -1,6 +1,5 @@
-import { CanceledError } from "axios"
-import { useState, useEffect } from "react"
-import apiService from "../services/api-service"
+import { useQuery } from "@tanstack/react-query"
+import { API_CLIENT } from "../services/api-client"
 
 export interface Genre {
     id: number,
@@ -8,31 +7,19 @@ export interface Genre {
     image_background: string
 }
 
-const api = apiService()
+const apiClient= new API_CLIENT('/genres')
 
 const useGenres = () => {
-    const [error, setError] = useState('')
-    const [genres, setGenres] = useState<Genre[]>([])
-    const [loading, setLoading] = useState(false)
 
-    useEffect(() => {
-        const controller = new AbortController()
-        setLoading(true)
-        api.get("/genres", {signal: controller.signal})
-        .then(res => {
-            const {data: {results:genres}} = res
-            setGenres(genres)
-        })
-        .catch(err => {
-            if (err instanceof CanceledError)
-                return
-            setError(err)
-        })
-        .finally(() => setLoading(false))
-        return () => controller.abort()
-    }, [])
-
-    return {genres, error, loading}
+    const fetchGenres = () => {
+        return apiClient.getAll<Genre>()
+    }
+    return useQuery<Genre[], Error>({
+        queryKey: ["genres"],
+        queryFn: fetchGenres,
+        retry: true,
+        staleTime: 86400*1000*3
+    })
 }
 
 export default useGenres

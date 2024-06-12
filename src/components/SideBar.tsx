@@ -8,11 +8,11 @@ interface Props {
 }
 
 function SideBar({onGenreSelect, activeGenre}: Props) {
-    const {genres, error ,loading} = useGenres()
-
+    const {data:genres, error, isLoading} = useGenres()
+    console.log(genres)
     if (error)
         return null
-    if (loading)
+    if (isLoading)
         return <Spinner marginLeft='35%' size='xl' color='green.300'/>
     return (
         <List spacing={3}>

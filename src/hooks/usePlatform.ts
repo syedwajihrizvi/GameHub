@@ -1,30 +1,21 @@
-import { useEffect, useState } from "react"
-import apiService from "../services/api-service"
-import Platform from "../components/Platforms"
-import { CanceledError } from "axios"
 
-const api = apiService()
+import { API_CLIENT } from "../services/api-client"
+import { useQuery } from "@tanstack/react-query"
+import Platform from "../components/Platforms"
+
+const apiClient = new API_CLIENT('/platforms')
 
 const usePlatform = () => {
-    const [platforms, setPlatforms] = useState<Platform[]>([])
-    const [error, setError] = useState('')
+    const fetchPlatforms = () => {
+        return apiClient.getAll<Platform>()
+    }
 
-    useEffect(() => {
-        const controller = new AbortController()
-        api.get('/platforms', {signal: controller.signal})
-        .then(res => {
-            const {results} = res.data
-            setPlatforms(results)
-        })
-        .catch(err => {
-            if (err instanceof CanceledError)
-                return
-            setError(err)
-        })
-        return () => controller.abort()
-    }, [])
-
-    return {platforms, error}
+    return useQuery<Platform[], Error>({
+        queryKey: ['platforms'],
+        queryFn: fetchPlatforms,
+        staleTime: 86400*1000*7,
+        retry: true
+    })
 }
 
 export default usePlatform
