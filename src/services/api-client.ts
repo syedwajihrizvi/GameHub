@@ -10,6 +10,6 @@ export class API_CLIENT {
     }
 
     getAll = <T>(params: AxiosRequestConfig = {}) => {
-        return this.apiClient.get<FetchResponse<T>>(this.endpoint, params).then(res => res.data.results)
+        return this.apiClient.get<FetchResponse<T>>(this.endpoint, {params}).then(res => res.data.results)
     }
 }
