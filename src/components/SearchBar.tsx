@@ -26,11 +26,14 @@ function SearchBar({onEnter}: Props) {
                 <Search2Icon color='gray.300' />
             </InputLeftElement>
             <Input borderRadius={20} value={search} placeholder="Search Games" onChange={(event) => setSearch(event.target.value)} onKeyDown={(event) => handleKeyDown(event)}/>
-            <InputRightElement width='4.5rem'>
-            <Button background='none' h='1.75rem' size='sm' onClick={() => handleClear()}>
-                <CloseIcon color='red.300'/>
-            </Button>
-            </InputRightElement>
+            {
+            search && 
+                <InputRightElement width='4.5rem'>
+                    <Button background='none' h='1.75rem' size='sm' onClick={() => handleClear()}>
+                        <CloseIcon color='red.300'/>
+                    </Button>
+                </InputRightElement>
+            }
         </InputGroup>
         </>
     )
