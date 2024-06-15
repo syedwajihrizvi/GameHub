@@ -10,8 +10,8 @@ interface Props {
 }
 
 function GameGrid({gameQuery}: Props) {
-    const {data:games, error, isLoading} = useGames(gameQuery)
-
+    const {data, error, isLoading} = useGames(gameQuery)
+    const games = data?.results
     const skeletons = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     return (
         <SimpleGrid columns={{sm: 1, md: 3, lg: 4, xl: 4}} spacing='10px'>

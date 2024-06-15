@@ -8,15 +8,15 @@ interface Props {
 }
 
 function SideBar({onGenreSelect, activeGenre}: Props) {
-    const {data:genres, error, isLoading} = useGenres()
-    console.log(genres)
+    const {data, error, isLoading} = useGenres()
+    const genres = data?.results
     if (error)
         return null
     if (isLoading)
         return <Spinner marginLeft='35%' size='xl' color='green.300'/>
     return (
         <List spacing={3}>
-            {genres.map(genre => {
+            {genres?.map(genre => {
                 return (
                     <ListItem key={genre.id} borderRadius={8} padding="5px" onClick={() => onGenreSelect(genre)} background={genre.id == activeGenre?.id ? 'green.300' : ''}>
                         <HStack>

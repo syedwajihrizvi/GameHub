@@ -3,6 +3,7 @@ import {Genre} from "./useGenres"
 import { GameQuery } from "../App"
 import { useQuery} from "@tanstack/react-query"
 import { API_CLIENT } from "../services/api-client"
+import { FetchResponse } from "../services/fetchResponse"
 
 const apiClient = new API_CLIENT('/games')
 
@@ -31,7 +32,7 @@ const useGames = (gameQuery: GameQuery) => {
                 platforms: gameQuery.platform?.id
             }})
     }
-    return useQuery<Game[], Error>({
+    return useQuery<FetchResponse<Game>, Error>({
         queryKey: ['games', gameQuery],
         queryFn: fetchGames,
 

@@ -9,7 +9,9 @@ interface Props {
 }
 
 function PlatformSelector({onSelectPlatform, selectedPlatform}: Props){
-    const {data:platforms} = usePlatform()
+    const {data} = usePlatform()
+
+    const platforms = data?.results
     return (
         <Menu>
             <MenuButton as={Button} backgroundColor='green.300' marginBottom={3} leftIcon={<FaChevronDown />}>

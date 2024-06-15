@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query"
 import { API_CLIENT } from "../services/api-client"
+import { FetchResponse } from "../services/fetchResponse"
 
 export interface Genre {
     id: number,
@@ -14,7 +15,7 @@ const useGenres = () => {
     const fetchGenres = () => {
         return apiClient.getAll<Genre>()
     }
-    return useQuery<Genre[], Error>({
+    return useQuery<FetchResponse<Genre>, Error>({
         queryKey: ["genres"],
         queryFn: fetchGenres,
         retry: true,
